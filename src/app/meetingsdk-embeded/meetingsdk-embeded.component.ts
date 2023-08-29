@@ -1,8 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
 
 import { ZoomMtg } from '@zoomus/websdk';
+import { ZoomService } from '../shared/service/zoom.service';
 
 ZoomMtg.setZoomJSLib('https://source.zoom.us/2.15.2/lib', '/av');
 
@@ -13,24 +14,17 @@ ZoomMtg.i18n.load('en-US');
 ZoomMtg.i18n.reload('en-US');
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-meetingsdk-embeded',
+  templateUrl: './meetingsdk-embeded.component.html',
+  styleUrls: ['./meetingsdk-embeded.component.css']
 })
-export class AppComponent implements OnInit {
+export class MeetingsdkEmbededComponent implements OnInit {
 
-  authEndpoint = '';
-  sdkKey = 'xUpJJ5SfmRPhrX2lnDOjwvalTFfKtk19sFto';
-  meetingNumber = '123456789';
-  passWord = '';
-  role = 0;
-  userName = 'Angular';
-  userEmail = '';
-  registrantToken = '';
-  zakToken = '';
-  leaveUrl = 'http://localhost:40079';
 
-  constructor(public httpClient: HttpClient, @Inject(DOCUMENT) document) {
+  constructor(
+    public httpClient: HttpClient,
+    @Inject(DOCUMENT) document,
+    private zs: ZoomService, ) {
 
   }
 
@@ -62,18 +56,18 @@ export class AppComponent implements OnInit {
     document.getElementById('zmmtg-root').style.display = 'block';
 
     ZoomMtg.init({
-      leaveUrl: this.leaveUrl,
+      leaveUrl: this.zs.leaveUrl,
       success: (success) => {
         console.log(success);
         ZoomMtg.join({
           signature,
-          sdkKey: this.sdkKey,
-          meetingNumber: this.meetingNumber,
-          passWord: this.passWord,
-          userName: this.userName,
-          userEmail: this.userEmail,
-          tk: this.registrantToken,
-          zak: this.zakToken,
+          sdkKey: this.zs.sdkKey,
+          meetingNumber: this.zs.meetingNumber,
+          passWord: this.zs.passWord,
+          userName: this.zs.userName,
+          userEmail: this.zs.userEmail,
+          tk: this.zs.registrantToken,
+          zak: this.zs.zakToken,
           // tslint:disable-next-line:no-shadowed-variable
           success: (success) => {
             console.log(success);

@@ -1,30 +1,24 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-
+import { HttpClient } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
+import { ZoomService } from '../shared/service/zoom.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-meetingsdk-components',
+  templateUrl: './meetingsdk-components.component.html',
+  styleUrls: ['./meetingsdk-components.component.css']
 })
-export class AppComponent implements OnInit {
+export class MeetingsdkComponentsComponent implements OnInit {
 
-  authEndpoint = '';
-  sdkKey = 'xUpJJ5SfmRPhrX2lnDOjwvalTFfKtk19sFto';
-  meetingNumber = '123456789';
-  passWord = '';
-  role = 0;
-  userName = 'Angular';
-  userEmail = '';
-  registrantToken = '';
-  zakToken = '';
-  leaveUrl = 'http://localhost:40079';
 
   client = ZoomMtgEmbedded.createClient();
 
-  constructor(public httpClient: HttpClient, @Inject(DOCUMENT) document) {
+  constructor(
+    public httpClient: HttpClient,
+    @Inject(DOCUMENT) document,
+    private zs: ZoomService, ) {
+
 
   }
 
@@ -74,13 +68,13 @@ export class AppComponent implements OnInit {
 
     this.client.join({
       signature,
-      sdkKey: this.sdkKey,
-      meetingNumber: this.meetingNumber,
-      password: this.passWord,
-      userName: this.userName,
-      userEmail: this.userEmail,
-      tk: this.registrantToken,
-      zak: this.zakToken
+      sdkKey: this.zs.sdkKey,
+      meetingNumber: this.zs.meetingNumber,
+      password: this.zs.passWord,
+      userName: this.zs.userName,
+      userEmail: this.zs.userEmail,
+      tk: this.zs.registrantToken,
+      zak: this.zs.zakToken
     });
   }
 }
